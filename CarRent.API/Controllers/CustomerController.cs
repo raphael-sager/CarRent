@@ -51,6 +51,7 @@ namespace CarRent.API.Controllers
         [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
+            throw new NotImplementedException();
         }
     }
 }

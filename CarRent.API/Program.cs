@@ -1,4 +1,7 @@
 
+using CarRent.API.CustomerManagement.Domain;
+using CarRent.API.CustomerManagement.Infrastructure;
+
 namespace CarRent.API
 {
     public class Program
@@ -8,6 +11,7 @@ namespace CarRent.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -19,6 +23,7 @@ namespace CarRent.API
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }

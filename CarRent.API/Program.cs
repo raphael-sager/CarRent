@@ -12,6 +12,7 @@ namespace CarRent.API
 
             // Add services to the container.
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+            builder.Services.AddDbContext<CustomerContext>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,7 +32,6 @@ namespace CarRent.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 

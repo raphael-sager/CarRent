@@ -14,7 +14,7 @@ namespace CarRent.API.Controllers
 
         public CustomerController(ICustomerRepository repository)
         {
-            _repository = repository;
+            _repository = repository ?? throw new ArgumentNullException();
         }
         
         // GET: api/<CustomerController>

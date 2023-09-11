@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRent.API.Migrations
 {
     [DbContext(typeof(CarRentContext))]
-    [Migration("20230911112231_initial")]
+    [Migration("20230911121918_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -133,22 +133,17 @@ namespace CarRent.API.Migrations
             modelBuilder.Entity("CarRent.API.Entities.RentalContract", b =>
                 {
                     b.Property<int>("ContractNr")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContractNr"));
 
                     b.Property<int>("CarNr")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReservationNr")
+                    b.Property<int>("ReservationId")
                         .HasColumnType("int");
 
                     b.HasKey("ContractNr");
 
                     b.HasIndex("CarNr");
-
-                    b.HasIndex("ReservationNr");
 
                     b.ToTable("RentalContracts");
                 });
@@ -169,6 +164,9 @@ namespace CarRent.API.Migrations
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("RentalContractId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -248,8 +246,8 @@ namespace CarRent.API.Migrations
                         .IsRequired();
 
                     b.HasOne("CarRent.API.Entities.Reservation", "Reservation")
-                        .WithMany()
-                        .HasForeignKey("ReservationNr")
+                        .WithOne("RentalContract")
+                        .HasForeignKey("CarRent.API.Entities.RentalContract", "ContractNr")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -296,6 +294,12 @@ namespace CarRent.API.Migrations
             modelBuilder.Entity("CarRent.API.Entities.Customer", b =>
                 {
                     b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("CarRent.API.Entities.Reservation", b =>
+                {
+                    b.Navigation("RentalContract")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

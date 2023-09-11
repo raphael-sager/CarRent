@@ -1,4 +1,3 @@
-
 using CarRent.API.Context;
 using CarRent.API.CustomerManagement.Domain;
 using CarRent.API.CustomerManagement.Infrastructure;
@@ -35,7 +34,7 @@ namespace CarRent.API
             var scope = app.Services.CreateScope();
 
             var scopeContext = scope.ServiceProvider.GetService<CarRentContext>();
-            scopeContext.Database.EnsureCreated();
+            scopeContext!.Database.EnsureCreated();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

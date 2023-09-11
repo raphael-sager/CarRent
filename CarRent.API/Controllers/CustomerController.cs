@@ -1,5 +1,6 @@
 ﻿using CarRent.API.CustomerManagement.Api;
 using CarRent.API.CustomerManagement.Domain;
+using CarRent.API.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -29,29 +30,33 @@ namespace CarRent.API.Controllers
         [HttpGet("{id}")]
         public CustomerResponse Get(Guid id)
         {
-            throw new NotImplementedException();
+            var customer = _repository.Get(id);
+            return new CustomerResponse(customer.Id, customer.CustomerNr, customer.Name, null);
         }
 
         // POST api/<CustomerController>
         [HttpPost]
         public CustomerResponse Post([FromBody] CustomerRequest value)
         {
-            throw new NotImplementedException();
+            var customer = new Customer(value.Id.ToString(), value.FullName);
+            _repository.Add(customer);
+            return new CustomerResponse(customer.Id, customer.CustomerNr, customer.Name, null);
         }
-
 
         // PUT api/<CustomerController>/5
         [HttpPut("{id}")]
         public CustomerResponse Put(Guid id, [FromBody] CustomerRequest value)
         {
-            throw new NotImplementedException();
+            var customer = new Customer(value.Id.ToString(), value.FullName);
+            _repository.Update(customer);
+            return new CustomerResponse(customer.Id, customer.CustomerNr, customer.Name, null);
         }
 
         // DELETE api/<CustomerController>/5
         [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            _repository.Remove(id);
         }
     }
 }

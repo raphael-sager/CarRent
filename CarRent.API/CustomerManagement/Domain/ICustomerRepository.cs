@@ -13,5 +13,6 @@ namespace CarRent.API.CustomerManagement.Domain
         void Remove(Customer customer);
 
         void Remove(Guid id);
+        void Update(Customer customer);
     }
 }

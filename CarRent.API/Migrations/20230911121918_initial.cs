@@ -67,7 +67,8 @@ namespace CarRent.API.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TotalCost = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    RentalContractId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -130,9 +131,8 @@ namespace CarRent.API.Migrations
                 name: "RentalContracts",
                 columns: table => new
                 {
-                    ContractNr = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationNr = table.Column<int>(type: "int", nullable: false),
+                    ContractNr = table.Column<int>(type: "int", nullable: false),
+                    ReservationId = table.Column<int>(type: "int", nullable: false),
                     CarNr = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -145,8 +145,8 @@ namespace CarRent.API.Migrations
                         principalColumn: "CarNr",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RentalContracts_Reservations_ReservationNr",
-                        column: x => x.ReservationNr,
+                        name: "FK_RentalContracts_Reservations_ContractNr",
+                        column: x => x.ContractNr,
                         principalTable: "Reservations",
                         principalColumn: "ReservationNr",
                         onDelete: ReferentialAction.Cascade);
@@ -173,11 +173,6 @@ namespace CarRent.API.Migrations
                 name: "IX_RentalContracts_CarNr",
                 table: "RentalContracts",
                 column: "CarNr");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RentalContracts_ReservationNr",
-                table: "RentalContracts",
-                column: "ReservationNr");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CategoryId",

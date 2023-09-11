@@ -8,5 +8,7 @@
         public decimal TotalCost { get; set; }
         public Customer Customer { get; set; }
         public Category Category { get; set; }
+        public int RentalContractId { get; set; }
+        public RentalContract RentalContract { get; set; }
     }
 }

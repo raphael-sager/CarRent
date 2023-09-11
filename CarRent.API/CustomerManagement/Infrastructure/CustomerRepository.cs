@@ -45,5 +45,12 @@ namespace CarRent.API.CustomerManagement.Infrastructure
             _context.Customers.Remove(deleteCustomer);
             _context.SaveChanges();
         }
+
+        public void Update(Customer customer)
+        {
+            var updateCustomer = _context.Customers.FirstOrDefault(c => c.Id == customer.Id && c.Name == customer.Name);
+            if (updateCustomer == null) return;
+            _context.Customers.Update(updateCustomer);
+        }
     }
 }

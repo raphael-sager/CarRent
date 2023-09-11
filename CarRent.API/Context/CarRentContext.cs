@@ -22,7 +22,7 @@ namespace CarRent.API.Context
         {
 
         }
-        // TODO: add-migration initial (i think must set everywhere the primary key)
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>()
@@ -42,12 +42,19 @@ namespace CarRent.API.Context
             modelBuilder.Entity<Reservation>()
                 .HasOne<Category>(r => r.Category);
 
+            modelBuilder.Entity<Reservation>()
+                .HasOne<RentalContract>(r => r.RentalContract)
+                .WithOne(rc => rc.Reservation)
+                .HasForeignKey<Reservation>(r => r.RentalContractId);
+
             modelBuilder.Entity<RentalContract>()
-                .HasOne<Reservation>(c => c.Reservation);
+                .HasOne<Reservation>(c => c.Reservation)
+                .WithOne(r => r.RentalContract)
+                .HasForeignKey<RentalContract>(c => c.ContractNr);
 
             modelBuilder.Entity<RentalContract>()
                 .HasKey(rc => rc.ContractNr);
-
+            
             modelBuilder.Entity<RentalContract>()
                 .HasOne<Car>(rc => rc.Car)
                 .WithMany(c => c.Contracts);

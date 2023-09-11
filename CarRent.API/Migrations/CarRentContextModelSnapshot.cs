@@ -39,9 +39,6 @@ namespace CarRent.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CarId")
-                        .IsUnique();
-
                     b.ToTable("Brands");
                 });
 
@@ -64,42 +61,54 @@ namespace CarRent.API.Migrations
 
                     b.HasKey("CarNr");
 
+                    b.HasIndex("BrandId")
+                        .IsUnique();
+
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("ModelId")
+                        .IsUnique();
 
                     b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("CarRent.API.Entities.Category", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
                     b.Property<decimal>("DailyFee")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("cat_type")
+                    b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.HasKey("CategoryId");
 
                     b.ToTable("Categories");
 
-                    b.HasDiscriminator<string>("cat_type").HasValue("Category");
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Category");
 
                     b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("CarRent.API.Entities.Customer", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("CustomerNr")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerNr"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CustomerNr");
 
                     b.ToTable("Customers");
                 });
@@ -112,17 +121,11 @@ namespace CarRent.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CarId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CarId")
-                        .IsUnique();
 
                     b.ToTable("Models");
                 });
@@ -130,7 +133,10 @@ namespace CarRent.API.Migrations
             modelBuilder.Entity("CarRent.API.Entities.RentalContract", b =>
                 {
                     b.Property<int>("ContractNr")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContractNr"));
 
                     b.Property<int>("CarId")
                         .HasColumnType("int");
@@ -141,6 +147,8 @@ namespace CarRent.API.Migrations
                     b.HasKey("ContractNr");
 
                     b.HasIndex("CarId");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("RentalContracts");
                 });
@@ -153,17 +161,11 @@ namespace CarRent.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationNr"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
-
-                    b.Property<Guid>("CustomerId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("RentalContractId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -172,8 +174,6 @@ namespace CarRent.API.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("ReservationNr");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex("CustomerId");
 
@@ -201,50 +201,44 @@ namespace CarRent.API.Migrations
                     b.HasDiscriminator().HasValue("Midrange");
                 });
 
-            modelBuilder.Entity("CarRent.API.Entities.Brand", b =>
+            modelBuilder.Entity("CarRent.API.Entities.Car", b =>
                 {
-                    b.HasOne("CarRent.API.Entities.Car", "Car")
-                        .WithOne("Brand")
-                        .HasForeignKey("CarRent.API.Entities.Brand", "CarId")
+                    b.HasOne("CarRent.API.Entities.Brand", "Brand")
+                        .WithOne("Car")
+                        .HasForeignKey("CarRent.API.Entities.Car", "BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Car");
-                });
-
-            modelBuilder.Entity("CarRent.API.Entities.Car", b =>
-                {
                     b.HasOne("CarRent.API.Entities.Category", "Category")
                         .WithMany("Cars")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("CarRent.API.Entities.Model", b =>
-                {
-                    b.HasOne("CarRent.API.Entities.Car", "Car")
-                        .WithOne("Model")
-                        .HasForeignKey("CarRent.API.Entities.Model", "CarId")
+                    b.HasOne("CarRent.API.Entities.Model", "Model")
+                        .WithOne("Car")
+                        .HasForeignKey("CarRent.API.Entities.Car", "ModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Car");
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Model");
                 });
 
             modelBuilder.Entity("CarRent.API.Entities.RentalContract", b =>
                 {
                     b.HasOne("CarRent.API.Entities.Car", "Car")
-                        .WithMany("Contracts")
+                        .WithMany("RentalContracts")
                         .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CarRent.API.Entities.Reservation", "Reservation")
-                        .WithOne("RentalContract")
-                        .HasForeignKey("CarRent.API.Entities.RentalContract", "ContractNr")
+                        .WithMany("RentalContracts")
+                        .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -255,32 +249,24 @@ namespace CarRent.API.Migrations
 
             modelBuilder.Entity("CarRent.API.Entities.Reservation", b =>
                 {
-                    b.HasOne("CarRent.API.Entities.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CarRent.API.Entities.Customer", "Customer")
+                    b.HasOne("CarRent.API.Entities.Customer", "Customers")
                         .WithMany("Reservations")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Customers");
+                });
 
-                    b.Navigation("Customer");
+            modelBuilder.Entity("CarRent.API.Entities.Brand", b =>
+                {
+                    b.Navigation("Car")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CarRent.API.Entities.Car", b =>
                 {
-                    b.Navigation("Brand")
-                        .IsRequired();
-
-                    b.Navigation("Contracts");
-
-                    b.Navigation("Model")
-                        .IsRequired();
+                    b.Navigation("RentalContracts");
                 });
 
             modelBuilder.Entity("CarRent.API.Entities.Category", b =>
@@ -293,10 +279,15 @@ namespace CarRent.API.Migrations
                     b.Navigation("Reservations");
                 });
 
+            modelBuilder.Entity("CarRent.API.Entities.Model", b =>
+                {
+                    b.Navigation("Car")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("CarRent.API.Entities.Reservation", b =>
                 {
-                    b.Navigation("RentalContract")
-                        .IsRequired();
+                    b.Navigation("RentalContracts");
                 });
 #pragma warning restore 612, 618
         }

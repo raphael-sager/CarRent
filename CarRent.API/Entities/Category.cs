@@ -2,8 +2,9 @@
 {
     public abstract class Category
     {
-        public abstract int Id { get; set; }
+        public int CategoryId { get; set; }
         public abstract decimal DailyFee { get; set; }
-        public abstract ICollection<Car> Cars { get; set; }
+
+        public virtual ICollection<Car> Cars { get; set; }
     }
 }

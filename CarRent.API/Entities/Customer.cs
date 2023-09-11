@@ -1,25 +1,22 @@
-﻿namespace CarRent.API.Entities
+﻿using System.Net;
+
+namespace CarRent.API.Entities
 {
     public class Customer
     {
-        public Customer(string customerNr, string name)
+        public Customer(int id, string name)
         {
-            Id = Guid.NewGuid();
-            CustomerNr = customerNr;
+            CustomerNr = id;
             Name = name;
         }
 
         public Customer()
         {
-
         }
 
-        public Guid Id { get; }
+        public int CustomerNr { get; set; }
+        public string Name { get; set; }
 
-        public string CustomerNr { get; }
-
-        public string Name { get; }
-
-        public ICollection<Reservation> Reservations { get; set; }
+        public virtual ICollection<Reservation> Reservations { get; set; }
     }
 }

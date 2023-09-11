@@ -18,9 +18,9 @@ namespace CarRent.API.CustomerManagement.Infrastructure
             _context.Add(customer);
         }
 
-        public Customer Get(Guid id)
+        public Customer Get(int id)
         {
-            return _context.Customers.FirstOrDefault(c => c.Id == id) ?? throw new ArgumentNullException();
+            return _context.Customers.FirstOrDefault(c => c.CustomerNr == id) ?? throw new ArgumentNullException();
         }
 
         public IEnumerable<Customer> GetAll()
@@ -37,9 +37,9 @@ namespace CarRent.API.CustomerManagement.Infrastructure
             _context.SaveChanges();
         }
 
-        public void Remove(Guid id)
+        public void Remove(int id)
         {
-            var deleteCustomer = _context.Customers.FirstOrDefault(c => c.Id == id);
+            var deleteCustomer = _context.Customers.FirstOrDefault(c => c.CustomerNr == id);
 
             if (deleteCustomer == null) return;
             _context.Customers.Remove(deleteCustomer);
@@ -48,7 +48,7 @@ namespace CarRent.API.CustomerManagement.Infrastructure
 
         public void Update(Customer customer)
         {
-            var updateCustomer = _context.Customers.FirstOrDefault(c => c.Id == customer.Id && c.Name == customer.Name);
+            var updateCustomer = _context.Customers.FirstOrDefault(c => c.CustomerNr == customer.CustomerNr && c.Name == customer.Name);
             if (updateCustomer == null) return;
             _context.Customers.Update(updateCustomer);
         }

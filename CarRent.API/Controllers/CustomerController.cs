@@ -23,38 +23,38 @@ namespace CarRent.API.Controllers
         public IEnumerable<CustomerResponse> Get()
         {
             var customers = _repository.GetAll();
-            return customers.Select(x => new CustomerResponse(x.Id, x.CustomerNr, x.Name, null));
+            return customers.Select(x => new CustomerResponse(x.Name));
         }
 
         // GET api/<CustomerController>/5
         [HttpGet("{id}")]
-        public CustomerResponse Get(Guid id)
+        public CustomerResponse Get(int id)
         {
             var customer = _repository.Get(id);
-            return new CustomerResponse(customer.Id, customer.CustomerNr, customer.Name, null);
+            return new CustomerResponse(customer.Name);
         }
 
         // POST api/<CustomerController>
         [HttpPost]
         public CustomerResponse Post([FromBody] CustomerRequest value)
         {
-            var customer = new Customer(value.Id.ToString(), value.FullName);
+            var customer = new Customer(value.Id, value.FullName);
             _repository.Add(customer);
-            return new CustomerResponse(customer.Id, customer.CustomerNr, customer.Name, null);
+            return new CustomerResponse(customer.Name);
         }
 
         // PUT api/<CustomerController>/5
         [HttpPut("{id}")]
-        public CustomerResponse Put(Guid id, [FromBody] CustomerRequest value)
+        public CustomerResponse Put(int id, [FromBody] CustomerRequest value)
         {
-            var customer = new Customer(value.Id.ToString(), value.FullName);
+            var customer = new Customer(id, value.FullName);
             _repository.Update(customer);
-            return new CustomerResponse(customer.Id, customer.CustomerNr, customer.Name, null);
+            return new CustomerResponse(customer.Name);
         }
 
         // DELETE api/<CustomerController>/5
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public void Delete(int id)
         {
             _repository.Remove(id);
         }

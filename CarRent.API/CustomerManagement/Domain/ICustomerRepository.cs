@@ -6,13 +6,13 @@ namespace CarRent.API.CustomerManagement.Domain
     {
         IEnumerable<Customer> GetAll();
 
-        Customer Get(Guid id);
+        Customer Get(int id);
 
         void Add(Customer customer);
 
         void Remove(Customer customer);
 
-        void Remove(Guid id);
+        void Remove(int id);
         void Update(Customer customer);
     }
 }

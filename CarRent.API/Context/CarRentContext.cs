@@ -1,5 +1,6 @@
 ﻿using CarRent.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace CarRent.API.Context
 {
@@ -26,83 +27,49 @@ namespace CarRent.API.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Customer>()
-                .HasKey(c => c.Id);
+                .HasKey(c => c.CustomerNr);
+
             modelBuilder.Entity<Customer>()
-                .HasMany<Reservation>(c => c.Reservations)
-                .WithOne(r => r.Customer);
-
+                .HasMany(c => c.Reservations)
+                .WithOne(r => r.Customers);
+            
             modelBuilder.Entity<Reservation>()
-                .HasKey(r => r.ReservationNr);
-
-            modelBuilder.Entity<Reservation>()
-                .HasOne<Customer>(r => r.Customer)
-                .WithMany(c => c.Reservations);
-
-            modelBuilder.Entity<Reservation>()
-                .HasOne<Category>(r => r.Category);
-
-            modelBuilder.Entity<Reservation>()
-                .HasOne<RentalContract>(r => r.RentalContract)
-                .WithOne(rc => rc.Reservation)
-                .HasForeignKey<Reservation>(r => r.RentalContractId);
+                .HasKey(c => c.ReservationNr);
 
             modelBuilder.Entity<RentalContract>()
-                .HasOne<Reservation>(c => c.Reservation)
-                .WithOne(r => r.RentalContract)
-                .HasForeignKey<RentalContract>(c => c.ContractNr);
-
+                .HasKey(r => r.ContractNr);
             modelBuilder.Entity<RentalContract>()
-                .HasKey(rc => rc.ContractNr);
-
+                .HasOne(r => r.Car)
+                .WithMany(c => c.RentalContracts)
+                .HasForeignKey(r => r.CarId);
             modelBuilder.Entity<RentalContract>()
-                .HasOne<Car>(rc => rc.Car)
-                .WithMany(c => c.Contracts);
+                .HasOne(r => r.Reservation)
+                .WithMany(r => r.RentalContracts)
+                .HasForeignKey(r => r.ReservationId);
 
             modelBuilder.Entity<Car>()
                 .HasKey(c => c.CarNr);
-
             modelBuilder.Entity<Car>()
-                .HasMany<RentalContract>(c => c.Contracts)
-                .WithOne(rc => rc.Car);
-
-            modelBuilder.Entity<Car>()
-                .HasOne<Model>(c => c.Model)
+                .HasOne(c => c.Model)
                 .WithOne(m => m.Car)
                 .HasForeignKey<Car>(c => c.ModelId);
-
             modelBuilder.Entity<Car>()
-                .HasOne<Brand>(c => c.Brand)
+                .HasOne(c => c.Brand)
                 .WithOne(b => b.Car)
                 .HasForeignKey<Car>(c => c.BrandId);
-
             modelBuilder.Entity<Car>()
-                .HasOne<Category>(c => c.Category)
-                .WithMany(c => c.Cars);
+                .HasOne(c => c.Category)
+                .WithMany(c => c.Cars)
+                .HasForeignKey(c => c.CategoryId);
 
             modelBuilder.Entity<Category>()
-                .HasKey(c => c.Id);
+                .HasKey(c => c.CategoryId);
 
-            modelBuilder.Entity<Category>()
-                .HasDiscriminator<string>("cat_type")
-                .HasValue<Midrange>("Midrange")
-                .HasValue<Luxury>("Luxury")
-                .HasValue<Economy>("Economy");
+            modelBuilder.Entity<Economy>();
+            modelBuilder.Entity<Midrange>();
+            modelBuilder.Entity<Luxury>();
 
-            modelBuilder.Entity<Brand>()
-                .HasKey(b => b.Id);
-
-            modelBuilder.Entity<Brand>()
-                .HasOne<Car>(b => b.Car)
-                .WithOne(c => c.Brand)
-                .HasForeignKey<Brand>(b => b.CarId);
-
-            modelBuilder.Entity<Model>()
-                .HasKey(m => m.Id);
-
-            modelBuilder.Entity<Model>()
-                .HasOne<Car>(m => m.Car)
-                .WithOne(c => c.Model)
-                .HasForeignKey<Model>(m => m.CarId);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

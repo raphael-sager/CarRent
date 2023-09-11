@@ -1,4 +1,5 @@
 
+using CarRent.API.Context;
 using CarRent.API.CustomerManagement.Domain;
 using CarRent.API.CustomerManagement.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace CarRent.API
             // Add services to the container.
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
             builder.Services.AddSingleton<IConfiguration>(configuration);
-            builder.Services.AddDbContext<CustomerContext>(opt =>
+            builder.Services.AddDbContext<CarRentContext>(opt =>
             {
                 opt.UseSqlServer(configuration.GetConnectionString("ZbwCarrentContext"));
             });
@@ -33,7 +34,7 @@ namespace CarRent.API
 
             var scope = app.Services.CreateScope();
 
-            var scopeContext = scope.ServiceProvider.GetService<CustomerContext>();
+            var scopeContext = scope.ServiceProvider.GetService<CarRentContext>();
             scopeContext.Database.EnsureCreated();
 
             // Configure the HTTP request pipeline.

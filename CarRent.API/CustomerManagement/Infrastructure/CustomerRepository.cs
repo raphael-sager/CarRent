@@ -1,13 +1,14 @@
-﻿using CarRent.API.CustomerManagement.Domain;
+﻿using CarRent.API.Context;
+using CarRent.API.CustomerManagement.Domain;
 using CarRent.API.Entities;
 
 namespace CarRent.API.CustomerManagement.Infrastructure
 {
     public class CustomerRepository : ICustomerRepository
     {
-        private readonly CustomerContext _context;
+        private readonly CarRentContext _context;
 
-        public CustomerRepository(CustomerContext context)
+        public CustomerRepository(CarRentContext context)
         {
             _context = context;
         }

@@ -1,4 +1,6 @@
-﻿namespace CarRent.API.CustomerManagement.Domain
+﻿using CarRent.API.Entities;
+
+namespace CarRent.API.CustomerManagement.Domain
 {
     public interface ICustomerRepository
     {

@@ -1,19 +1,26 @@
-﻿using CarRent.API.CustomerManagement.Domain;
+﻿using CarRent.API.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarRent.API.CustomerManagement.Infrastructure
 {
     public class CustomerContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public DbSet<Customer> Customers { get; }
+
+        public CustomerContext(DbContextOptions<CustomerContext> options) : base(options)
         {
-            base.OnConfiguring(optionsBuilder);
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+                
         }
 
-        public DbSet<Customer> Customers { get; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Customer>().HasKey(k => k.Id);
+        }
+
     }
 }

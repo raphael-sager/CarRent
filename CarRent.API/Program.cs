@@ -1,6 +1,7 @@
 
 using CarRent.API.CustomerManagement.Domain;
 using CarRent.API.CustomerManagement.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarRent.API
 {
@@ -10,9 +11,18 @@ namespace CarRent.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            IConfiguration configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
             // Add services to the container.
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-            builder.Services.AddDbContext<CustomerContext>();
+            builder.Services.AddSingleton<IConfiguration>(configuration);
+            builder.Services.AddDbContext<CustomerContext>(opt =>
+            {
+                opt.UseSqlServer(configuration.GetConnectionString("ZbwCarrentContext"));
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -20,6 +30,11 @@ namespace CarRent.API
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+
+            var scope = app.Services.CreateScope();
+
+            var scopeContext = scope.ServiceProvider.GetService<CustomerContext>();
+            scopeContext.Database.EnsureCreated();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

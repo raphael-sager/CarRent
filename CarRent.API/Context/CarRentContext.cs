@@ -27,7 +27,6 @@ namespace CarRent.API.Context
         {
             modelBuilder.Entity<Customer>()
                 .HasKey(c => c.Id);
-
             modelBuilder.Entity<Customer>()
                 .HasMany<Reservation>(c => c.Reservations)
                 .WithOne(r => r.Customer);
@@ -54,7 +53,7 @@ namespace CarRent.API.Context
 
             modelBuilder.Entity<RentalContract>()
                 .HasKey(rc => rc.ContractNr);
-            
+
             modelBuilder.Entity<RentalContract>()
                 .HasOne<Car>(rc => rc.Car)
                 .WithMany(c => c.Contracts);

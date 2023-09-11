@@ -133,14 +133,14 @@ namespace CarRent.API.Migrations
                 {
                     ContractNr = table.Column<int>(type: "int", nullable: false),
                     ReservationId = table.Column<int>(type: "int", nullable: false),
-                    CarNr = table.Column<int>(type: "int", nullable: false)
+                    CarId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RentalContracts", x => x.ContractNr);
                     table.ForeignKey(
-                        name: "FK_RentalContracts_Cars_CarNr",
-                        column: x => x.CarNr,
+                        name: "FK_RentalContracts_Cars_CarId",
+                        column: x => x.CarId,
                         principalTable: "Cars",
                         principalColumn: "CarNr",
                         onDelete: ReferentialAction.Cascade);
@@ -170,9 +170,9 @@ namespace CarRent.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RentalContracts_CarNr",
+                name: "IX_RentalContracts_CarId",
                 table: "RentalContracts",
-                column: "CarNr");
+                column: "CarId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_CategoryId",

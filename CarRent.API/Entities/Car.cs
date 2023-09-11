@@ -9,5 +9,6 @@
         public Brand Brand { get; set; }
         public ICollection<RentalContract> Contracts { get; set; }
         public Category Category { get; set; }
+        public int CategoryId { get; set; }
     }
 }

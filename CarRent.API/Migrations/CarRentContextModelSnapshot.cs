@@ -132,7 +132,7 @@ namespace CarRent.API.Migrations
                     b.Property<int>("ContractNr")
                         .HasColumnType("int");
 
-                    b.Property<int>("CarNr")
+                    b.Property<int>("CarId")
                         .HasColumnType("int");
 
                     b.Property<int>("ReservationId")
@@ -140,7 +140,7 @@ namespace CarRent.API.Migrations
 
                     b.HasKey("ContractNr");
 
-                    b.HasIndex("CarNr");
+                    b.HasIndex("CarId");
 
                     b.ToTable("RentalContracts");
                 });
@@ -238,7 +238,7 @@ namespace CarRent.API.Migrations
                 {
                     b.HasOne("CarRent.API.Entities.Car", "Car")
                         .WithMany("Contracts")
-                        .HasForeignKey("CarNr")
+                        .HasForeignKey("CarId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
